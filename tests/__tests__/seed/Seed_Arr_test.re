@@ -1,7 +1,7 @@
 open TestFramework;
-open Seed;
+open DsSeed;
 
-describe("Ds_Seed_Arr", t =>
+describe("Ds_DsSeed_Arr", t =>
   t.describe("slice", t => {
     t.test("returns the same array", t =>
       t.expect.array(Arr.slice([|1, 2, 3, 4|], ~starti=0, ())).toEqual([|

@@ -1,0 +1,14 @@
+Ds_Repo › Owners › PrintByOwnersFile › prints to md
+`ownersFilePath1`
+owner11, owner12
+```
+filepath11
+filepath12
+```
+---
+`ownersFilePath2`
+owner21, owner22
+```
+filepath21
+filepath22
+```

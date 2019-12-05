@@ -8,6 +8,8 @@
     ds.seed
     ds.internal
     ds
+    rarg
+    orwell.cmds
   )
   (modules (:standard \ TestDev TestCi))
 )

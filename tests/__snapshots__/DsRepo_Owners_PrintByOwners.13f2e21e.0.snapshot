@@ -1,0 +1,17 @@
+Ds_Repo › Owners › PrintByOwners › prints to terminal
+<cyan>owner1</cyan>
+<white>ownersFilePaths11</white>
+  filepath11
+
+<white>ownersFilePaths12 (shared by 2)</white>
+  filepath12
+
+
+<cyan>owner2</cyan>
+<white>ownersFilePaths21 (shared by 2)</white>
+  filepath21
+
+<white>ownersFilePaths22</white>
+  filepath22
+
+

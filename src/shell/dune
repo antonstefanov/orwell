@@ -1,0 +1,6 @@
+(library
+  (name Shell)
+  (public_name ds.shell)
+  (flags (-w -40 -w +26))
+  (libraries lwt lwt.unix ds.seed)
+  (preprocess (pps lwt_ppx)))

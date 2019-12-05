@@ -3,6 +3,7 @@ let isSome = (maybe: option('a)): bool =>
   | None => false
   | Some(_) => true
   };
+
 let map = (maybe: option('a), ~fn: 'a => 'b): option('b) =>
   switch (maybe) {
   | None => None
@@ -21,9 +22,9 @@ let flatMap = (maybe: option('a), ~fn: 'a => 'b): 'b =>
   | Some(x) => fn(x)
   };
 
-let getExn = (maybe: option('a)): 'a =>
+let getExn = (maybe: option('a), message: string): 'a =>
   switch (maybe) {
-  | None => failwith("argument is null")
+  | None => failwith("argument is null: " ++ message)
   | Some(x) => x
   };
 

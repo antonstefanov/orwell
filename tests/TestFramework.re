@@ -1,4 +1,4 @@
-let projectDir = Seed.ProjectRoot.get();
+let projectDir = DsSeed.ProjectRoot.get();
 
 DsInternal.Components.Span.setMode(HumanReadable);
 

@@ -11,3 +11,14 @@ let rec closestDir = (~dir, ~filename): option(string) =>
     | parentDir => closestDir(~dir=parentDir, ~filename)
     };
   };
+
+let readdir = path => Lwt_unix.readdir(path);
+
+let dirname = path => Filename.dirname(path);
+
+let read = (filename: string): Lwt_stream.t(string) =>
+  Lwt_io.lines_of_file(filename);
+
+let readAllLines = (filename: string): Lwt.t(list(string)) => {
+  read(filename) |> Stream.toList(_);
+};

@@ -1,6 +1,6 @@
 (executable
-  (package bin)
-  (name Bin)
-  (public_name Bin)
-  (libraries lwt lwt.unix ds ds.seed)
+  (package orwell)
+  (name Orwell)
+  (public_name Orwell)
+  (libraries ds ds.seed ds.shell ds.repo lwt lwt.unix OrwellCmds)
   (preprocess (pps lwt_ppx)))

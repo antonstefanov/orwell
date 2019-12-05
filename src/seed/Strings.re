@@ -57,3 +57,7 @@ let startsWith = (str, ~start): bool => {
     aux(0);
   };
 };
+
+let substr = (str: string, ~starti: int, ~endi: option(int)=?, ()) =>
+  Option.getDefault(endi, ~default=String.length(str) - starti)
+  |> String.sub(str, starti, _);

@@ -1,9 +1,9 @@
 open TestFramework;
-open Seed;
+open DsSeed;
 
-let get = Option.getExn;
+let get = x => Option.getExn(x, "string tests");
 
-describe("Ds_Seed_Strings", t => {
+describe("Ds_DsSeed_Strings", t => {
   t.describe("repeat", t => {
     t.test("is empty", t =>
       t.expect.string(Strings.repeat("abc", ~times=0)).toEqual("")

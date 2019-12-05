@@ -31,9 +31,9 @@ jobs:
   - job: Release
     displayName: Release
     dependsOn:
-      - Linux
+      # - Linux
       - macOS
-      - Windows
+      # - Windows
     pool:
       vmImage: macOS-10.13
       demands: node.js

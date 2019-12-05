@@ -2,13 +2,17 @@
   "saveAndRun": {
     "commands": [
       {
+        "cmd": "ocamlformat --profile janestreet --inplace ${file}",
+        "match": ".ml"
+      },
+      {
         "cmd": "clear && esy test",
         "match": ".re"
       }
     ]
   },
   "code-runner.executorMapByFileExtension": {
-    ".re": "esy x qw"
+    ".re": "esy x orwell"
   },
   "search.exclude": {
     "**/node_modules": true,

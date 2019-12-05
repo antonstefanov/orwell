@@ -1,0 +1,1 @@
+let cwd = () => Sys.getcwd();

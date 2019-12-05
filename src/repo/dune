@@ -1,0 +1,6 @@
+(library
+  (name Repo)
+  (public_name ds.repo)
+  (flags (-w -40 -w +26))
+  (libraries lwt lwt.unix ds.shell ds.seed console.lib)
+  (preprocess (pps lwt_ppx)))
