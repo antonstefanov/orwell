@@ -15,12 +15,13 @@ module Diff = {
     | '*' => BlackBright
     | _ => BlackBright
     };
+
   let toMd =
       (lines: list(string), ~display: option(Repo.Git.Display.t)=?, ())
       : string => {
     switch (display) {
     | None => <DiffBlock> {String.concat("\n", lines)} </DiffBlock>
-    | Some(_) => String.concat("\n", lines)
+    | Some(_) => <CodeBlock> {String.concat("\n", lines)} </CodeBlock>
     };
   };
 
@@ -39,7 +40,7 @@ module Diff = {
             let (diffType, name) = Seed.Strings.splitAtIndex(line, ~index=1);
             <Lines>
               <Span>
-                <Span color={colorOfDiff(line.[0])}> diffType </Span>
+                <Span color={colorOfDiff(diffType.[0])}> diffType </Span>
                 " "
                 <Span> name </Span>
               </Span>

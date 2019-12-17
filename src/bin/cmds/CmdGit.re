@@ -48,7 +48,6 @@ module CmdDiff = {
         ~copy: bool,
         ~dash: list(string),
       ) => {
-    let%lwt repodir = Repo.Git.getRootDir();
     let%lwt diff =
       Repo.Git.diff(~filter?, ~comparedCommit?, ~display?, ~dash, forkCommit);
     let (toMd, toLines) = (
