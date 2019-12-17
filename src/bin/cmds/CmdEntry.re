@@ -17,7 +17,7 @@ module CmdStart = {
       ~version=V.version,
       ~args,
       ~run,
-      ~children=[("owners", CmdOwners.cmd)],
+      ~children=[("owners", CmdOwners.cmd), ("git", CmdGit.cmd)],
       (),
     );
 };

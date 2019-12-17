@@ -70,10 +70,23 @@ module Code = {
 };
 module CodeBlock = {
   let createElement =
-      (~children: list(string), ~indent=0, ~marginBottom=0, ()) =>
+      (~children: list(string), ~lang=?, ~indent=0, ~marginBottom=0, ()) =>
     <Lines indent marginBottom>
-      <Line> "```" </Line>
+      <Line>
+        "```"
+        <Span> {DsSeed.Option.getDefault(lang, ~default="")} </Span>
+      </Line>
       <Lines> ...children </Lines>
       <Line> "```" </Line>
+    </Lines>;
+};
+
+module DiffBlock = {
+  let createElement =
+      (~children: list(string), ~indent=0, ~marginBottom=0, ()) =>
+    <Lines indent marginBottom>
+      <Line> "````diff" </Line>
+      <Lines> ...children </Lines>
+      <Line> "````" </Line>
     </Lines>;
 };

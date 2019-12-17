@@ -50,17 +50,6 @@ module GroupBy = {
 };
 module StringSet = Set.Make(String);
 
-module Arg = {
-  let copy = args =>
-    Args.One.boolFlag(
-      ~args,
-      ~name="--copy",
-      ~alias="-c",
-      ~doc="Whether to copy the output to your clipboard",
-      T.bool,
-    );
-};
-
 let printAndCopy =
     (
       ~repodir: string,
@@ -86,15 +75,7 @@ let printAndCopy =
       ((() => p.toMd(grouped)), (() => p.toTerminal(grouped)));
     };
 
-  let%lwt () = Lwt_list.iter_s(Lwt_io.printl, toLines());
-  let%lwt () =
-    if (copy) {
-      let content = toMd();
-      let%lwt () = Shell.Process.writeOne("pbcopy", ~content);
-      Lwt_io.printl(<Span color=Green> "Copied to your clipboard" </Span>);
-    } else {
-      Lwt.return();
-    };
+  let%lwt () = Printer.printAndCopy(~toMd, ~toLines, ~copy);
   Lwt.return(Ok());
 };
 
@@ -132,7 +113,7 @@ module CmdOwnersFiles = {
       T.string,
     );
   let (args, getGroupBy) = GroupBy.arg(args);
-  let (args, getCopy) = Arg.copy(args);
+  let (args, getCopy) = SharedArg.createCopy(args);
   let run = map => {
     handle(
       ~files1=getFiles1(map),
@@ -145,7 +126,18 @@ module CmdOwnersFiles = {
     Cmd.make(
       ~name="Files",
       ~version,
-      ~doc="Get owners based on a list of files",
+      ~doc=
+        <Lines>
+          <Line> "Get owners based on a list of files" </Line>
+          <Line marginBottom=2>
+            "You can also pipe the output of other commands, for example:"
+          </Line>
+          <Line indent=1>
+            <Span color=Cyan>
+              "find . -path node_modules -prune -o -type f -name '*.jpg' | orwell owners files"
+            </Span>
+          </Line>
+        </Lines>,
       ~args,
       ~run,
       (),
@@ -153,26 +145,6 @@ module CmdOwnersFiles = {
 };
 
 module CmdOwnersChanged = {
-  let fstr = (name, description) =>
-    <Line indent=8>
-      " "
-      <Span bold=true> name </Span>
-      <Span> description </Span>
-    </Line>;
-  let filters =
-    [
-      fstr("A", "Added"),
-      fstr("C", "Copied"),
-      fstr("D", "Deleted"),
-      fstr("M", "Modified"),
-      fstr("R", "Renamed"),
-      fstr("T", "have their type (mode) changed"),
-      fstr("U", "Unmerged"),
-      fstr("X", "Unknown"),
-      fstr("B", "have had their pairing Broken"),
-      fstr("*", "All-or-none"),
-    ]
-    |> String.concat("\n");
   let mergeUntracked = (existing: list(string)): Lwt.t(list(string)) => {
     let%lwt untracked = Repo.Git.getUntrackedChanges();
     List.fold_left(
@@ -202,24 +174,9 @@ module CmdOwnersChanged = {
     printAndCopy(~files=changedFilesList, ~repodir, ~copy, ~groupBy);
   };
   let args = [];
-  let (args, getBase) =
-    Args.Positional.Many.default(
-      ~args,
-      ~name="base",
-      ~doc=
-        <Line>
-          <Span>
-            "Base branch or commit(s) to use for determining the changed files. For example "
-          </Span>
-          <Span bold=true> "origin/master" </Span>
-          <Span> " or " </Span>
-          <Span bold=true> "origin/master my-branch" </Span>
-        </Line>,
-      ~default=["origin/master"],
-      T.branch,
-    );
+  let (args, getBase) = GitArg.createBase(args);
   let (args, getGroupBy) = GroupBy.arg(args);
-  let (args, getCopy) = Arg.copy(args);
+  let (args, getCopy) = SharedArg.createCopy(args);
   let (args, getIncludeUntracked) =
     Args.One.boolFlag(
       ~args,
@@ -229,23 +186,13 @@ module CmdOwnersChanged = {
         "Whether to include all files (including untracked) in the changed files list",
       T.bool,
     );
-  let (args, getFilter) =
-    Args.One.opt(
-      ~args,
-      ~name="--filter",
-      ~doc=
-        <Lines>
-          <Line>
-            <Span> "How to filter changed files, for example " </Span>
-            <Span bold=true> "ACD" </Span>
-            <Span> ", use lower case to exclude." </Span>
-          </Line>
-          <Line> filters </Line>
-        </Lines>,
-      T.string,
-    );
+  let (args, getFilter) = GitArg.createFilter(args);
+
   let run = map => {
-    let h = (~comparedCommit=?, forkCommit) =>
+    let%lwt result = GitArg.extractCommits(getBase(map));
+    switch (result) {
+    | Error(err) => Lwt.return(Error(err))
+    | Ok((comparedCommit, forkCommit)) =>
       handle(
         ~forkCommit,
         ~comparedCommit?,
@@ -253,23 +200,34 @@ module CmdOwnersChanged = {
         ~copy=getCopy(map),
         ~groupBy=getGroupBy(map),
         ~includeUntracked=getIncludeUntracked(map),
-      );
-    switch (getBase(map)) {
-    | [] => Error("Must provide a base") |> Lwt.return
-    | [base] =>
-      let%lwt forkCommit = Repo.Git.getBaseCommit(base);
-      h(forkCommit);
-    | [base, comparedCommit] =>
-      let%lwt forkCommit = Repo.Git.getBaseCommit(~comparedCommit, base);
-      h(~comparedCommit, forkCommit);
-    | _ => Error("Must provide 1 or 2") |> Lwt.return
+      )
     };
   };
   let cmd: Cmd.t(Lwt.t(cmdResult)) =
     Cmd.make(
       ~name="Changed Files",
       ~version,
-      ~doc="Get owners based on changes compared to a base branch or commit",
+      ~doc=
+        <Lines>
+          <Line>
+            "Get owners based on changes compared to a base branch or commit"
+          </Line>
+          <Line>
+            "To view changed files owners of the current branch, compared to "
+            <Span color=Yellow> "origin/master" </Span>
+          </Line>
+          <Line marginBottom=1 indent=2>
+            <Span color=Cyan> "orwell owners changed --copy" </Span>
+          </Line>
+          <Line>
+            "To view changed files owners between 2 branches/commits (useful when checking remote PR chains):"
+          </Line>
+          <Line indent=2>
+            <Span color=Cyan>
+              "orwell owners changed origin/base-branch origin/checked-branch"
+            </Span>
+          </Line>
+        </Lines>,
       ~args,
       ~run,
       (),
@@ -286,7 +244,17 @@ let cmd: Cmd.t(Lwt.t(cmdResult)) =
   Cmd.make(
     ~name="Owners",
     ~version,
-    ~doc="Helpers related to the OWNERS files.",
+    ~doc=
+      <Lines>
+        <Line> "Helpers related to the OWNERS files." </Line>
+        <Line>
+          <Span color=Yellow> "owners[CMD]" </Span>
+          "is printing a human-readable list of owners in the terminal."
+        </Line>
+        <Line>
+          "You can use `--copy` (or `-c`) to copy the output in `Markdown` format that you can paste in PRs."
+        </Line>
+      </Lines>,
     ~args,
     ~run,
     ~children=[

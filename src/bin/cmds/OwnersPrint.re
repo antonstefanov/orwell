@@ -1,9 +1,5 @@
 open Ds.Components;
 
-type printer('a) = {
-  toMd: 'a => string,
-  toTerminal: 'a => list(string),
-};
 module ByOwnersFile = {
   let toMd = (ownerlines: list(Repo.Owners.OwnersLines.t)): string =>
     List.map(
@@ -28,7 +24,7 @@ module ByOwnersFile = {
         </Lines>,
       ownerlines,
     );
-  let printer: printer(list(Repo.Owners.OwnersLines.t)) = {
+  let printer: Printer.t(list(Repo.Owners.OwnersLines.t)) = {
     toMd,
     toTerminal,
   };
@@ -93,7 +89,7 @@ module ByOwner = {
       ownerlines,
     );
 
-  let printer: printer(list(Repo.Owners.OwnersLines.groupedByOwner)) = {
+  let printer: Printer.t(list(Repo.Owners.OwnersLines.groupedByOwner)) = {
     toMd,
     toTerminal,
   };
