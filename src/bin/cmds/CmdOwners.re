@@ -244,17 +244,17 @@ let cmd: Cmd.t(Lwt.t(cmdResult)) =
   Cmd.make(
     ~name="Owners",
     ~version,
-    ~doc=
-      <Lines>
-        <Line> "Helpers related to the OWNERS files." </Line>
-        <Line>
-          <Span color=Yellow> "owners (cmd)" </Span>
-          "is printing a human-readable list of owners in the terminal."
-        </Line>
-        <Line>
-          "You can use `--copy` (or `-c`) to copy the output in `Markdown` format that you can paste in PRs."
-        </Line>
-      </Lines>,
+    ~doc="Helpers related to the OWNERS files.",
+    // <Lines>
+    //   <Line> "Helpers related to the OWNERS files." </Line>
+    //   <Line>
+    //     <Span color=Yellow> "owners (cmd)" </Span>
+    //     "is printing a human-readable list of owners in the terminal."
+    //   </Line>
+    //   <Line>
+    //     "You can use `--copy` (or `-c`) to copy the output in `Markdown` format that you can paste in PRs."
+    //   </Line>
+    // </Lines>,
     ~args,
     ~run,
     ~children=[
