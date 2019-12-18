@@ -248,7 +248,7 @@ let cmd: Cmd.t(Lwt.t(cmdResult)) =
       <Lines>
         <Line> "Helpers related to the OWNERS files." </Line>
         <Line>
-          <Span color=Yellow> "owners[CMD]" </Span>
+          <Span color=Yellow> "owners (cmd)" </Span>
           "is printing a human-readable list of owners in the terminal."
         </Line>
         <Line>
