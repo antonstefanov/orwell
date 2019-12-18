@@ -109,7 +109,7 @@ module CmdDiff = {
             "Get a diff excluding .xlf files (supports the same base-branch checked-branch format as owners changed)"
           </Line>
           <Line>
-            "For example to copy a diff for pasting as a GitHub comment:"
+            "For example to copy a diff for pasting as a GitHub comment"
           </Line>
           <Line marginBottom=1 indent=2>
             <Span color=Cyan> "orwell git diff --filter M --copy" </Span>

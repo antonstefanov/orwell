@@ -130,7 +130,7 @@ module CmdOwnersFiles = {
         <Lines>
           <Line> "Get owners based on a list of files" </Line>
           <Line marginBottom=2>
-            "You can also pipe the output of other commands, for example:"
+            "You can also pipe the output of other commands, for example"
           </Line>
           <Line indent=1>
             <Span color=Cyan>
