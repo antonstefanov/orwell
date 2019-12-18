@@ -48,11 +48,30 @@ module CmdDiff = {
         ~copy: bool,
         ~dash: list(string),
       ) => {
-    let%lwt diff =
-      Repo.Git.diff(~filter?, ~comparedCommit?, ~display?, ~dash, forkCommit);
+    let coloredDiffPromise =
+      Repo.Git.diff(
+        ~filter?,
+        ~comparedCommit?,
+        ~display?,
+        ~color=true,
+        ~dash,
+        forkCommit,
+      );
+    let%lwt coloredDiff = coloredDiffPromise
+    and mdDiff =
+      copy
+        ? Repo.Git.diff(
+            ~filter?,
+            ~comparedCommit?,
+            ~display?,
+            ~color=false,
+            ~dash,
+            forkCommit,
+          )
+        : coloredDiffPromise;
     let (toMd, toLines) = (
-      () => GitPrint.Diff.toMd(diff, ~display?, ()),
-      () => GitPrint.Diff.toTerminal(diff, ~display?, ()),
+      () => GitPrint.Diff.toMd(mdDiff, ~display?, ()),
+      () => GitPrint.Diff.toTerminal(coloredDiff, ~display?, ()),
     );
     let%lwt () = Printer.printAndCopy(~toMd, ~toLines, ~copy);
     Lwt.return(Ok());

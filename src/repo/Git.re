@@ -19,7 +19,8 @@ module Display = {
     | Stat => "--stat";
 };
 
-module Internal = {
+/*Internal*/
+module I = {
   let ifTrue = (v, ~s) => v ? s : "";
   let map = (v, ~fn) => DsSeed.Option.bi(v, ~fn, ~default="");
   let opt = v => DsSeed.Option.getDefault(v, ~default="");
@@ -30,6 +31,7 @@ let diff =
       ~filter=?,
       ~comparedCommit=?,
       ~dash=[],
+      ~color=false,
       ~display: option(Display.t)=?,
       commit: string,
     )
@@ -37,11 +39,11 @@ let diff =
   Shell.Process.readAll(
     [
       "git diff",
-      Internal.opt(Option.map(Display.toString, display)),
-      Internal.map(filter, ~fn=f => "--diff-filter=" ++ f),
+      I.opt(Option.map(Display.toString, display)),
+      I.map(filter, ~fn=f => "--diff-filter=" ++ f),
       commit,
-      Internal.opt(comparedCommit),
-      "--color",
+      I.opt(comparedCommit),
+      I.ifTrue(color, ~s="--color"),
       "--",
       "':!*.xlf'",
       ...dash,
@@ -52,7 +54,7 @@ let diff =
 
 let getChangedFiles =
     (~filter=?, ~comparedCommit=?, commit: string): Lwt.t(list(string)) =>
-  diff(~filter?, ~comparedCommit?, ~display=NameOnly, commit);
+  diff(~filter?, ~comparedCommit?, ~color=false, ~display=NameOnly, commit);
 
 let getUntrackedChanges = (): Lwt.t(list(string)) =>
   Shell.Process.readAll("git ls-files --others --exclude-standard");
