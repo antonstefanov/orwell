@@ -1,5 +1,5 @@
 {
-  "checksum": "cc449b82031cea070eec97f0aece88c6",
+  "checksum": "dddbaee79aeed18befb6645c0c17abf2",
   "root": "orwell-cli@link-dev:./package.json",
   "node": {
     "refmterr@3.2.2@d41d8cd9": {
@@ -22,14 +22,14 @@
       ],
       "devDependencies": []
     },
-    "rarg@0.6.1@d41d8cd9": {
-      "id": "rarg@0.6.1@d41d8cd9",
+    "rarg@0.6.2@d41d8cd9": {
+      "id": "rarg@0.6.2@d41d8cd9",
       "name": "rarg",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/rarg/-/rarg-0.6.1.tgz#sha1:2a3430b9a55fde58c4bec2acd4fbe91e4a9d8572"
+          "archive:https://registry.npmjs.org/rarg/-/rarg-0.6.2.tgz#sha1:30b420e01ad35bbd9e6a378e1c2b1587b88d6e13"
         ]
       },
       "overrides": [],
@@ -54,7 +54,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "refmterr@3.2.2@d41d8cd9", "rarg@0.6.1@d41d8cd9",
+        "refmterr@3.2.2@d41d8cd9", "rarg@0.6.2@d41d8cd9",
         "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.2.1@d41d8cd9",
         "@reason-native/console@0.1.0@d41d8cd9",
         "@opam/lwt_ppx@opam:1.2.3@22f5b56c", "@opam/lwt@opam:4.3.0@865b709c",
@@ -62,8 +62,7 @@
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@reason-native/rely@3.1.0@d41d8cd9",
-        "@reason-native/console@0.1.0@d41d8cd9",
-        "@opam/odoc@opam:1.4.2@6f058006", "@opam/merlin@opam:3.3.3@d653b06a"
+        "@opam/odoc@opam:1.4.2@11b715bb", "@opam/merlin@opam:3.3.3@d653b06a"
       ]
     },
     "ocaml@4.8.1000@d41d8cd9": {
@@ -437,8 +436,8 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/odoc@opam:1.4.2@6f058006": {
-      "id": "@opam/odoc@opam:1.4.2@6f058006",
+    "@opam/odoc@opam:1.4.2@11b715bb": {
+      "id": "@opam/odoc@opam:1.4.2@11b715bb",
       "name": "@opam/odoc",
       "version": "opam:1.4.2",
       "source": {

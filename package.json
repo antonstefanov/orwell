@@ -1,6 +1,6 @@
 {
   "name": "orwell-cli",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "DS description",
   "license": "MIT",
   "author": {
@@ -45,7 +45,7 @@
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "refmterr": "*",
     "ocaml": "~4.8.1000",
-    "rarg": "^0.6.1"
+    "rarg": "^0.6.2"
   },
   "devDependencies": {
     "@opam/merlin": "*",

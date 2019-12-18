@@ -133,7 +133,7 @@ module CmdOwnersFiles = {
             "You can also pipe the output of other commands, for example"
           </Line>
           <Line indent=1>
-            <Span>
+            <Span color=Cyan>
               "find . -path node_modules -prune -o -type f -name '*.jpg' | orwell owners files"
             </Span>
           </Line>
@@ -214,16 +214,16 @@ module CmdOwnersChanged = {
           </Line>
           <Line>
             "To view changed files owners of the current branch, compared to "
-            <Span> "origin/master" </Span>
+            <Span color=Yellow> "origin/master" </Span>
           </Line>
           <Line marginBottom=1 indent=2>
-            <Span> "orwell owners changed --copy" </Span>
+            <Span color=Cyan> "orwell owners changed --copy" </Span>
           </Line>
           <Line>
             "To view changed files owners between 2 branches/commits (useful when checking remote PR chains):"
           </Line>
           <Line indent=2>
-            <Span>
+            <Span color=Cyan>
               "orwell owners changed origin/base-branch origin/checked-branch"
             </Span>
           </Line>
@@ -248,16 +248,16 @@ let cmd: Cmd.t(Lwt.t(cmdResult)) =
       <Lines>
         <Line> "Helpers related to the OWNERS files." </Line>
         <Line>
-          <Span> "owners (cmd)" </Span>
-          "is printing a human-readable list of owners in the terminal."
+          <Span color=Yellow> "owners (cmd)" </Span>
+          " is printing a human-readable list of owners in the terminal."
         </Line>
         <Line>
           "You can use "
-          <Span> "--copy" </Span>
+          <Span color=Yellow> "--copy" </Span>
           " or "
-          <Span> "-c" </Span>
+          <Span color=Yellow> "-c" </Span>
           " to copy the output in "
-          <Span> "Markdown" </Span>
+          <Span color=Yellow> "Markdown" </Span>
           " format that you can paste in PRs."
         </Line>
       </Lines>,
