@@ -112,11 +112,11 @@ module CmdDiff = {
             "For example to copy a diff for pasting as a GitHub comment"
           </Line>
           <Line marginBottom=1 indent=2>
-            <Span color=Cyan> "orwell git diff --filter M --copy" </Span>
+            <Span> "orwell git diff --filter M --copy" </Span>
           </Line>
           <Line> "Or to see the impacted files" </Line>
           <Line indent=2>
-            <Span color=Cyan> "orwell git diff --display status" </Span>
+            <Span> "orwell git diff --display status" </Span>
           </Line>
         </Lines>,
       ~args,
