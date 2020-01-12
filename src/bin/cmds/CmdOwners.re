@@ -114,6 +114,7 @@ module CmdOwnersFiles = {
     );
   let (args, getGroupBy) = GroupBy.arg(args);
   let (args, getCopy) = SharedArg.createCopy(args);
+
   let run = map => {
     handle(
       ~files1=getFiles1(map),
@@ -122,26 +123,22 @@ module CmdOwnersFiles = {
       ~groupBy=getGroupBy(map),
     );
   };
+
+  let doc =
+    <Lines>
+      <Line> "Get owners based on a list of files" </Line>
+      <Line marginBottom=2>
+        "You can also pipe the output of other commands, for example"
+      </Line>
+      <Line indent=1>
+        <Span color=Cyan>
+          "find . -path node_modules -prune -o -type f -name '*.jpg' | orwell owners files"
+        </Span>
+      </Line>
+    </Lines>;
+
   let cmd: Cmd.t(Lwt.t(cmdResult)) =
-    Cmd.make(
-      ~name="Files",
-      ~version,
-      ~doc=
-        <Lines>
-          <Line> "Get owners based on a list of files" </Line>
-          <Line marginBottom=2>
-            "You can also pipe the output of other commands, for example"
-          </Line>
-          <Line indent=1>
-            <Span color=Cyan>
-              "find . -path node_modules -prune -o -type f -name '*.jpg' | orwell owners files"
-            </Span>
-          </Line>
-        </Lines>,
-      ~args,
-      ~run,
-      (),
-    );
+    Cmd.make(~name="Files", ~version, ~doc, ~args, ~run, ());
 };
 
 module CmdOwnersChanged = {
@@ -203,35 +200,30 @@ module CmdOwnersChanged = {
       )
     };
   };
+  let doc =
+    <Lines>
+      <Line>
+        "Get owners based on changes compared to a base branch or commit"
+      </Line>
+      <Line>
+        "To view changed files owners of the current branch, compared to "
+        <Span color=Yellow> "origin/master" </Span>
+      </Line>
+      <Line marginBottom=1 indent=2>
+        <Span color=Cyan> "orwell owners changed --copy" </Span>
+      </Line>
+      <Line>
+        "To view changed files owners between 2 branches/commits (useful when checking remote PR chains):"
+      </Line>
+      <Line indent=2>
+        <Span color=Cyan>
+          "orwell owners changed origin/base-branch origin/checked-branch"
+        </Span>
+      </Line>
+    </Lines>;
+
   let cmd: Cmd.t(Lwt.t(cmdResult)) =
-    Cmd.make(
-      ~name="Changed Files",
-      ~version,
-      ~doc=
-        <Lines>
-          <Line>
-            "Get owners based on changes compared to a base branch or commit"
-          </Line>
-          <Line>
-            "To view changed files owners of the current branch, compared to "
-            <Span color=Yellow> "origin/master" </Span>
-          </Line>
-          <Line marginBottom=1 indent=2>
-            <Span color=Cyan> "orwell owners changed --copy" </Span>
-          </Line>
-          <Line>
-            "To view changed files owners between 2 branches/commits (useful when checking remote PR chains):"
-          </Line>
-          <Line indent=2>
-            <Span color=Cyan>
-              "orwell owners changed origin/base-branch origin/checked-branch"
-            </Span>
-          </Line>
-        </Lines>,
-      ~args,
-      ~run,
-      (),
-    );
+    Cmd.make(~name="Changed Files", ~version, ~doc, ~args, ~run, ());
 };
 
 let args = [];
@@ -240,27 +232,30 @@ let run = _m =>
     "You need to specify a subcommand, for example 'changed', enter --help for help.",
   )
   |> Lwt.return(_);
-let cmd: Cmd.t(Lwt.t(cmdResult)) =
+
+let cmd: Cmd.t(Lwt.t(cmdResult)) = {
+  let doc =
+    <Lines>
+      <Line> "Helpers related to the OWNERS files." </Line>
+      <Line>
+        <Span color=Yellow> "owners (cmd)" </Span>
+        " is printing a human-readable list of owners in the terminal."
+      </Line>
+      <Line>
+        "You can use "
+        <Span color=Yellow> "--copy" </Span>
+        " or "
+        <Span color=Yellow> "-c" </Span>
+        " to copy the output in "
+        <Span color=Yellow> "Markdown" </Span>
+        " format that you can paste in PRs."
+      </Line>
+    </Lines>;
+
   Cmd.make(
     ~name="Owners",
     ~version,
-    ~doc=
-      <Lines>
-        <Line> "Helpers related to the OWNERS files." </Line>
-        <Line>
-          <Span color=Yellow> "owners (cmd)" </Span>
-          " is printing a human-readable list of owners in the terminal."
-        </Line>
-        <Line>
-          "You can use "
-          <Span color=Yellow> "--copy" </Span>
-          " or "
-          <Span color=Yellow> "-c" </Span>
-          " to copy the output in "
-          <Span color=Yellow> "Markdown" </Span>
-          " format that you can paste in PRs."
-        </Line>
-      </Lines>,
+    ~doc,
     ~args,
     ~run,
     ~children=[
@@ -269,3 +264,4 @@ let cmd: Cmd.t(Lwt.t(cmdResult)) =
     ],
     (),
   );
+};

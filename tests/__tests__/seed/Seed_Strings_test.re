@@ -4,6 +4,11 @@ open DsSeed;
 let get = x => Option.getExn(x, "string tests");
 
 describe("Ds_DsSeed_Strings", t => {
+  t.describe("matchesGlob", t => {
+    t.test("a", t =>
+      t.expect.bool(Strings.matchesGlob("abc", ~glob="a*")).toBeTrue()
+    )
+  });
   t.describe("repeat", t => {
     t.test("is empty", t =>
       t.expect.string(Strings.repeat("abc", ~times=0)).toEqual("")

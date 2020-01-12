@@ -1,7 +1,5 @@
 open Ds.Components;
-/**
-You can define a logo to be displayed in --help
-*/
+
 let logo =
   <Span color=Magenta>
     {|
