@@ -34,7 +34,7 @@ let split = (str: string): list(char) => {
 
 let contains = (s1: string, s2: string): bool => {
   let re = Str.regexp_string(s2);
-  try (
+  try(
     {
       ignore(Str.search_forward(re, s1, 0));
       true;
@@ -61,3 +61,8 @@ let startsWith = (str, ~start): bool => {
 let substr = (str: string, ~starti: int, ~endi: option(int)=?, ()) =>
   Option.getDefault(endi, ~default=String.length(str) - starti)
   |> String.sub(str, starti, _);
+
+let matchesGlob = (str: string, ~glob: string) => {
+  let re = Re.compile(Re.Glob.glob(glob));
+  Re.execp(re, str);
+};

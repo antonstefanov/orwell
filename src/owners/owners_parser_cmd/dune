@@ -1,0 +1,6 @@
+(executable
+  (name Oparse)
+  (package oparse)
+  (public_name oparse)
+  (libraries rarg ds.seed ds.owners owners.parser console.lib)
+)

@@ -1,6 +1,6 @@
 {
   "name": "orwell-cli",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "description": "DS description",
   "license": "MIT",
   "author": {
@@ -12,6 +12,8 @@
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "install": [
       "esy-installer orwell.install",
+      "esy-installer owners.install",
+      "esy-installer oparse.install",
       "esy-installer ds.install",
       "esy-installer tests.install"
     ],
@@ -37,15 +39,16 @@
   "homepage": "https://github.com/antonstefanov/orwell",
   "bugs": "https://github.com/antonstefanov/orwell/issues",
   "dependencies": {
-    "@opam/dune": "^1.10.0",
+    "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
+    "@opam/dune": "1.11.4",
     "@opam/lwt": "4.3.0",
     "@opam/lwt_ppx": "1.2.3",
+    "@opam/re": "1.9.0",
     "@reason-native/console": "*",
     "@reason-native/pastel": "0.2.1",
-    "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
-    "refmterr": "*",
     "ocaml": "~4.8.1000",
-    "rarg": "^0.6.2"
+    "rarg": "^0.6.2",
+    "refmterr": "3.2.2"
   },
   "devDependencies": {
     "@opam/merlin": "*",

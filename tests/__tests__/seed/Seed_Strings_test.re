@@ -4,6 +4,30 @@ open DsSeed;
 let get = x => Option.getExn(x, "string tests");
 
 describe("Ds_DsSeed_Strings", t => {
+  t.describe("matchesGlob", t => {
+    t.test("matches a*", t =>
+      t.expect.bool(Strings.matchesGlob("abc", ~glob="a*")).toBeTrue()
+    );
+    t.test("matches *c", t =>
+      t.expect.bool(Strings.matchesGlob("abc", ~glob="*c")).toBeTrue()
+    );
+    t.test("matches without chars", t =>
+      t.expect.bool(Strings.matchesGlob("abc.file.js", ~glob="abc*.file.js")).
+        toBeTrue()
+    );
+    t.test("matches with chars", t =>
+      t.expect.bool(
+        Strings.matchesGlob("abcdefg.file.js", ~glob="abc*.file.js"),
+      ).
+        toBeTrue()
+    );
+    t.test("does not match", t =>
+      t.expect.bool(
+        Strings.matchesGlob("abcdefg.file2.js", ~glob="abc*.file.js"),
+      ).
+        toBeFalse()
+    );
+  });
   t.describe("repeat", t => {
     t.test("is empty", t =>
       t.expect.string(Strings.repeat("abc", ~times=0)).toEqual("")

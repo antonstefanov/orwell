@@ -51,11 +51,25 @@ let maybeIndent = (items: list(string), indent: int) =>
 let renderIfTrue = (cond: bool, render: unit => string) =>
   cond ? render() : "";
 
+let renderIfSome = (opt: option('a), render: 'a => string) =>
+  switch (opt) {
+  | None => ""
+  | Some(x) => render(x)
+  };
+
+let renderIfMany = (xs: list('a), render: unit => string) =>
+  switch (xs) {
+  | [] => ""
+  | _ => render()
+  };
+
 module Lines = {
   let createElement =
-      (~children: list(string), ~indent=0, ~marginBottom=0, ()) =>
-    String.concat("\n", maybeIndent(children, indent))
+      (~children: list(string), ~indent=0, ~marginBottom=0, ()) => {
+    let lines = List.filter(c => c != "", children);
+    String.concat("\n", maybeIndent(lines, indent))
     ++ DsSeed.Strings.repeat("\n", ~times=marginBottom);
+  };
 };
 module Line = {
   let createElement =
@@ -89,4 +103,13 @@ module DiffBlock = {
       <Lines> ...children </Lines>
       <Line> "````" </Line>
     </Lines>;
+};
+
+module Quotes = {
+  let createElement =
+      (~children: list(string), ~lang=?, ~indent=0, ~marginBottom=0, ()) => {
+    let content = List.map(x => "> " ++ x, children);
+    let marginBottom = max(1, marginBottom);
+    <Lines indent marginBottom> <Lines> ...content </Lines> </Lines>;
+  };
 };

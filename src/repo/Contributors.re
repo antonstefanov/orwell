@@ -47,6 +47,13 @@ let readFileToMap =
   toMap(contributorsList) |> Lwt.return;
 };
 
+let emailToContributor = (email, ~contributorsMap) => {
+  switch (StringMap.find_opt(email, contributorsMap)) {
+  | Some(contributor) => "@" ++ contributor
+  | None => email
+  };
+};
+
 let transformOwners =
     (
       {lines, ownersFilePath, filepaths}: Owners.OwnersLines.t,
