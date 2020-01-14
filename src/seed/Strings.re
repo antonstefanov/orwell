@@ -63,7 +63,6 @@ let substr = (str: string, ~starti: int, ~endi: option(int)=?, ()) =>
   |> String.sub(str, starti, _);
 
 let matchesGlob = (str: string, ~glob: string) => {
-  false// let re = Re.compile(Re.Glob.glob(glob));
-       ;
-       // Re.execp(re, str);
+  let re = Re.compile(Re.Glob.glob(glob));
+  Re.execp(re, str);
 };

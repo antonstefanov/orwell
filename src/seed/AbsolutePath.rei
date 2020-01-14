@@ -17,3 +17,5 @@ let unique: list(t) => list(t);
 let compare: (t, t) => int;
 
 let basename: t => string;
+
+let dirname: t => t;

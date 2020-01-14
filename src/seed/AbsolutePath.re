@@ -11,6 +11,8 @@ let closestDir = (dir: t, ~filename: string) => {
 };
 let join = (dir, ~filename: string) => Path.join([dir, filename]);
 
+let dirname = path => Filename.dirname(path);
+
 let unique = (dirs: list(t)): list(t) =>
   List.sort_uniq(String.compare, dirs);
 

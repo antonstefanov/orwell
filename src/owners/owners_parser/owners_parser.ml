@@ -36,16 +36,6 @@ let print_error outc = function
       output_string outc "Parser error\n";
       print_err outc pos
 
-(* let rec parse_and_print (lexbuf : Lexing.lexbuf) =
-  match parse_line lexbuf with
-  | Ok v -> (
-      match v with
-      | Some value ->
-          print_endline (Ast.line_to_string value);
-          parse_and_print lexbuf
-      | None -> () )
-  | Error e -> print_error e *)
-
 let parse_lexbuf lexbuf =
   let rec aux xs =
     match parse_line lexbuf with

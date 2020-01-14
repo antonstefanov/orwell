@@ -1,5 +1,5 @@
 (library
   (name OrwellCmds)
   (public_name orwell.cmds)
-  (libraries lwt lwt.unix rarg ds ds.seed ds.shell ds.repo)
+  (libraries lwt lwt.unix rarg ds ds.seed ds.shell ds.repo ds.owners)
   (preprocess (pps lwt_ppx)))

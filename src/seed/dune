@@ -1,6 +1,6 @@
 (library
   (name DsSeed)
   (public_name ds.seed)
-  (libraries lwt lwt.unix pastel.lib console.lib)
+  (libraries lwt lwt.unix re pastel.lib console.lib)
   (preprocess (pps lwt_ppx))
   )

@@ -1,8 +1,9 @@
 /**
  * Get the closest dir that contains a filename
  */
-let rec closestDir = (~dir, ~filename): option(string) =>
-  if (Sys.file_exists(Filename.concat(dir, filename))) {
+let rec closestDir = (~dir, ~filename): option(string) => {
+  let x = Filename.concat(dir, filename);
+  if (Sys.file_exists(x) && !Sys.is_directory(x)) {
     Some(dir);
   } else {
     switch (Filename.dirname(dir)) {
@@ -11,6 +12,7 @@ let rec closestDir = (~dir, ~filename): option(string) =>
     | parentDir => closestDir(~dir=parentDir, ~filename)
     };
   };
+};
 
 let readdir = path => Lwt_unix.readdir(path);
 

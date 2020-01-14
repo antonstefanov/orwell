@@ -48,7 +48,11 @@ type t = {
 let closestOwnersFileExn: AP.t => AP.t;
 
 let maybeParseOwner:
-  (~ownersPathAstMap: OwnersPathAstMap.t, ~owners: AP.t, ~rootdir: AP.t) =>
+  (
+    ~ownersPathAstMap: OwnersPathAstMap.t,
+    ~ownersFilepath: AP.t,
+    ~rootdir: AP.t
+  ) =>
   (OwnersAst.t, OwnersPathAstMap.t);
 
-let parseClosestOwners: (~files: list(AP.t), ~rootdir: AP.t) => t;
+let parseClosestOwners: (~filepaths: list(AP.t), ~rootdir: AP.t) => t;

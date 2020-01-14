@@ -1,6 +1,6 @@
 (library
   (name Owners)
   (public_name ds.owners)
-  (libraries lwt lwt.unix rarg ds.seed owners.parser)
+  (libraries lwt lwt.unix rarg ds ds.seed owners.parser console.lib)
   (preprocess (pps lwt_ppx))
 )

@@ -101,12 +101,6 @@ module FollowedOwnersAst = {
     Remote(aux(lines, []));
   };
 
-  let absPath = (~path, ~rootdir) => {
-    let len = String.length("file:");
-    let path = DsSeed.Strings.slice(path, ~starti=len, ());
-    AP.make(~rootdir, ~path);
-  };
-
   let rec follow = (lines: list(Owners_parser.Ast.line), ~rootdir) => {
     lines
     |> List.fold_left(
@@ -116,7 +110,7 @@ module FollowedOwnersAst = {
            | Comment(x) => [Comment(x), ...xs]
            | Email(x) => [Email(x), ...xs]
            | Path(path) =>
-             let absolute = absPath(~rootdir, ~path);
+             let absolute = AP.make(~rootdir, ~path);
              let parsed = parseOwnersFile(absolute);
              let followed = follow(parsed, ~rootdir);
              filterRemoteRelevant(followed) @ xs;
@@ -128,7 +122,7 @@ module FollowedOwnersAst = {
                | Anyone => Anyone
                | Email(x) => Email(x)
                | Path(path) =>
-                 let absolute = absPath(~rootdir, ~path);
+                 let absolute = AP.make(~rootdir, ~path);
                  let parsed = parseOwnersFile(absolute);
                  let followed = follow(parsed, ~rootdir);
                  linesToPerFileRemote(followed);
@@ -340,48 +334,30 @@ let findClosestOwnersFilepaths = (filepaths: list(AP.t)) => {
 };
 
 let maybeParseOwner =
-    (~ownersPathAstMap: OwnersPathAstMap.t, ~owners: AP.t, ~rootdir: AP.t) => {
-  switch (OwnersPathAstMap.findOwnersAst(ownersPathAstMap, ~filepath=owners)) {
+    (
+      ~ownersPathAstMap: OwnersPathAstMap.t,
+      ~ownersFilepath: AP.t,
+      ~rootdir: AP.t,
+    ) => {
+  switch (
+    OwnersPathAstMap.findOwnersAst(ownersPathAstMap, ~filepath=ownersFilepath)
+  ) {
   | Some(x) => (x, ownersPathAstMap)
   | None =>
-    let lines = parseOwnersFile(owners);
+    let lines = parseOwnersFile(ownersFilepath);
     let followed = FollowedOwnersAst.follow(lines, ~rootdir);
     let x = OwnersAst.ofFollowedLines(followed);
-    (x, OwnersPathAstMap.add(ownersPathAstMap, ~k=owners, ~v=x));
+    (x, OwnersPathAstMap.add(ownersPathAstMap, ~k=ownersFilepath, ~v=x));
   };
 };
-
-/* let doA =
-       (
-         ~closestOwnersMap: FileOwnersPathMap.t,
-         ~ownersPathAstMap: OwnersPathAstMap.t,
-         ~filepath: AP.t,
-         ~rootdir: AP.t,
-       )
-       : OwnersAst.t => {
-     let closestOwners =
-       switch (FileOwnersPathMap.findOwnersPath(closestOwnersMap, ~filepath)) {
-       | Some(x) => x
-       | None => closestOwnersFileExn(filepath)
-       };
-     switch (
-       OwnersPathAstMap.findOwnersPath(ownersPathAstMap, ~filepath=closestOwners)
-     ) {
-     | Some(x) => x
-     | None =>
-       let lines = parseOwnersFile(closestOwners);
-       let followed = FollowedOwnersAst.follow(lines, ~rootdir);
-       OwnersAst.ofFollowedLines(followed);
-     };
-   }; */
 
 type t = {
   closestOwnersMap: FileOwnersPathMap.t,
   ownersPathAstMap: OwnersPathAstMap.t,
 };
 
-let parseClosestOwners = (~files: list(AP.t), ~rootdir: AP.t): t => {
-  let closestOwnersMap = findClosestOwnersFilepaths(files);
+let parseClosestOwners = (~filepaths: list(AP.t), ~rootdir: AP.t): t => {
+  let closestOwnersMap = findClosestOwnersFilepaths(filepaths);
   let uniqueOwnersFiles = FileOwnersPathMap.uniqueOwners(closestOwnersMap);
   let rawOwners =
     uniqueOwnersFiles |> List.map(x => (x, parseOwnersFile(x)));

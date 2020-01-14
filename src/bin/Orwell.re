@@ -13,6 +13,10 @@ let logo =
   </Span>;
 
 // esy x orwell --help
+switch (DsSeed.Env.getOpt("DEBUG")) {
+| Some(_) => Printexc.record_backtrace(true)
+| None => ()
+};
 
 let main =
   Lwt_main.run(
@@ -36,6 +40,10 @@ let main =
             exit(1);
           };
         }
+      | exception e =>
+        let%lwt () = Lwt_io.printl("Err");
+        Printexc.print_backtrace(stdout);
+        exit(1);
       };
     },
   );
