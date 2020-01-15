@@ -2,8 +2,11 @@
 set noparent
 base@parser.com
 base2@parser.com
+base+plus@parser.com
 per-file parse*.config.js=config@parser.com
 per-file yarn.lock=set noparent
 per-file yarn.lock=yarn@parser.com
+per-file .bamze=bamze@parser.com
+per-file WORK=work@parser.com
 per-file README.md=*
 per-file p*.ml=file://src/bin/OWNERS

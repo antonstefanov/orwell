@@ -5,8 +5,8 @@ module Printer = {
   module ByOwnersFile = {
     let perFileFileToString = (perFileFile: Owners.perFileFile) =>
       switch (perFileFile) {
-      | Filename(x) => "file: " ++ x
-      | FileGlob(x) => "glob: " ++ x
+      | Filename(x) => "per-file: " ++ x
+      | FileGlob(x) => "per-file-glob: " ++ x
       };
     let perFileToString =
         (
@@ -21,7 +21,7 @@ module Printer = {
         switch (perFileOwners) {
         | Anyone => "anyone"
         | NoParentEmails(emails) =>
-          "no-parent: "
+          "noparent: "
           ++ (List.map(formatEmail, emails) |> String.concat(", "))
         | Emails(emails) =>
           List.map(formatEmail, emails) |> String.concat(", ")
@@ -55,7 +55,7 @@ module Printer = {
         ) =>
           <Lines>
             <Code> {formatPath(ownersFilepath)} </Code>
-            {renderIfTrue(noParent, () => <Line> "no-parent" </Line>)}
+            {renderIfTrue(noParent, () => <Line> "noparent" </Line>)}
             {renderIfMany(comments, () => <Quotes> ...comments </Quotes>)}
             {renderIfSome(perFileOwners, ({filepaths, matches}) =>
                <Lines>
@@ -85,7 +85,7 @@ module Printer = {
       | Anyone => <Span color=Green> "anyone" </Span>
       | NoParentEmails(emails) =>
         <Span>
-          <Span color=Blue> "no-parent " </Span>
+          <Span color=Blue> "noparent " </Span>
           <Span color=Cyan>
             {List.map(formatEmail, emails) |> String.concat(", ")}
           </Span>
@@ -113,10 +113,12 @@ module Printer = {
           },
         ) =>
           <Lines marginBottom=1>
-            <Span color=White> {formatPath(ownersFilepath)} </Span>
-            {renderIfTrue(noParent, () =>
-               <Span color=Blue> "no-parent" </Span>
-             )}
+            <Line>
+              <Span color=White> {formatPath(ownersFilepath)} </Span>
+              {renderIfTrue(noParent, () =>
+                 <Span color=Blue> " noparent" </Span>
+               )}
+            </Line>
             {renderIfMany(comments, () =>
                <Span italic=true> {String.concat("\n", comments)} </Span>
              )}

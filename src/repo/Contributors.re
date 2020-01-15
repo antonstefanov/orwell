@@ -48,6 +48,8 @@ let readFileToMap =
 };
 
 let emailToContributor = (email, ~contributorsMap) => {
+  // remove '+' from emails my+something@email.com
+  let email = Str.replace_first(Str.regexp(".+(\\+.+)@.+"), "", email);
   switch (StringMap.find_opt(email, contributorsMap)) {
   | Some(contributor) => "@" ++ contributor
   | None => email

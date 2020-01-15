@@ -89,7 +89,7 @@ module FollowedOwnersAst = {
       | [x, ...xs] =>
         switch (x) {
         | Anyone => Anyone
-        // set no-parent is not relevant for remote files
+        // set noparent is not relevant for remote files
         | SetNoParent => aux(xs, emails)
         | Comment(x) => aux(xs, emails)
         | Email(x) => aux(xs, [x, ...emails])

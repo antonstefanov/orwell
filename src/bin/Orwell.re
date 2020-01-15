@@ -41,7 +41,7 @@ let main =
           };
         }
       | exception e =>
-        let%lwt () = Lwt_io.printl("Err");
+        print_endline("Unhandled exception");
         Printexc.print_backtrace(stdout);
         exit(1);
       };

@@ -5,14 +5,14 @@
 }
 
 let non_et = ['a'-'z' 'A'-'Z' '0'-'9' '_' '-' '.']+
-let email = non_et '@' non_et '.' non_et
+let email = non_et ('+' non_et)? '@' non_et '.' non_et
 
 let directory = "//"? ['a'-'z' 'A'-'Z' '0'-'9' '_' '-' '.' '~' '/']*
 let file = ['a'-'z' 'A'-'Z' '0'-'9' '_' '-' '.']+
 let owner_file = "OWNERS" | file "_OWNERS"
 let path = "file:" directory* owner_file
 let file_extension = ['a'-'z' 'A'-'Z' '0'-'9']+
-let filename = file '.' file_extension
+let filename = file ('.' file_extension)?
 let file_glob = ['a'-'z' 'A'-'Z' '0'-'9' '_' '-' '.' '*']+
 
 let white = [' ' '\t']+
