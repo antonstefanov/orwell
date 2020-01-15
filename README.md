@@ -64,3 +64,7 @@ It supports the same format for base-branch checked-branch as `orwell owners cha
 ```
 orwell git diff origin/base-branch origin/checked-branch --display status
 ```
+
+## Info
+
+There is a short summary of how the lexing and parsing works in [src/owners/README.md](./src/owners/README.md)
