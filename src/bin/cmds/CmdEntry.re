@@ -18,8 +18,8 @@ module CmdStart = {
       ~args,
       ~run,
       ~children=[
-        ("beta-owners", CmdBetaOwners.cmd),
         ("owners", CmdOwners.cmd),
+        ("deprecated_owners", CmdDeprecatedOwners.cmd),
         ("git", CmdGit.cmd),
       ],
       (),

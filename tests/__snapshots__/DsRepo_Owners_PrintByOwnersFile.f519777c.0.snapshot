@@ -1,11 +1,25 @@
 Ds_Repo › Owners › PrintByOwnersFile › prints to terminal
-<white>ownersFilePath1</white>
-<cyan>owner11, owner12</cyan>
-  filepath11
-  filepath12
+<white>/ownersFilepath1</white><blue> noparent</blue>
+<italic>comment-line11
+comment-line12</italic>
+<bold>per-file: filename1</bold> | <blue>noparent </blue><cyan>email13, email14</cyan>
+<bold>per-file-glob: filename11*</bold> | <cyan>email15, email16</cyan>
+  /filepath13
+  /filepath14
+<cyan>email11, email12</cyan>
+  /filepath11
+  /filepath12
 
-<white>ownersFilePath2</white>
-<cyan>owner21, owner22</cyan>
-  filepath21
-  filepath22
+<white>/ownersFilepath2</white><blue> noparent</blue>
+<italic>comment-line21
+comment-line22</italic>
+<bold>per-file-glob: filename11*</bold> | <cyan>email25, email26</cyan>
+<bold>per-file: filename2</bold> | <green>anyone</green>
+  /filepath23
+  /filepath24
+<cyan>anyone</cyan>
+  /filepath21
+  /filepath22
+
+<white>/ownersFilepath3</white>
 

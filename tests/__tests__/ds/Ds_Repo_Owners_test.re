@@ -1,73 +1,82 @@
 open TestFramework;
 
 module O = Repo.Owners;
+
 describe("Ds_Repo", t => {
+  let abs = path =>
+    DsSeed.AbsolutePath.make(~rootdir=DsSeed.AbsolutePath.root, ~path);
+  let formatEmail = x => x;
+  let formatPath = DsSeed.AbsolutePath.toString;
   t.describe("Owners", t => {
     t.describe("PrintByOwnersFile", t => {
-      let ownersLines: list(Repo.Owners.OwnersLines.t) = [
+      let files: list(Owners.GroupedByOwnersFile.t) = [
         {
-          ownersFilePath: "ownersFilePath1",
-          filepaths: ["filepath11", "filepath12"],
-          lines: ["owner11", "owner12"],
+          ownersFilepath: abs("ownersFilepath1"),
+          comments: ["comment-line11", "comment-line12"],
+          noParent: true,
+          owners:
+            Some({
+              filepaths: [abs("filepath11"), abs("filepath12")],
+              owners: Emails(["email11", "email12"]),
+            }),
+          perFileOwners:
+            Some({
+              filepaths: [abs("filepath13"), abs("filepath14")],
+              matches: [
+                (
+                  Filename("filename1"),
+                  NoParentEmails(["email13", "email14"]),
+                ),
+                (FileGlob("filename11*"), Emails(["email15", "email16"])),
+              ],
+            }),
         },
         {
-          ownersFilePath: "ownersFilePath2",
-          filepaths: ["filepath21", "filepath22"],
-          lines: ["owner21", "owner22"],
+          ownersFilepath: abs("ownersFilepath2"),
+          comments: ["comment-line21", "comment-line22"],
+          noParent: true,
+          owners:
+            Some({
+              filepaths: [abs("filepath21"), abs("filepath22")],
+              owners: Anyone,
+            }),
+          perFileOwners:
+            Some({
+              filepaths: [abs("filepath23"), abs("filepath24")],
+              matches: [
+                (FileGlob("filename11*"), Emails(["email25", "email26"])),
+                (Filename("filename2"), Anyone),
+              ],
+            }),
+        },
+        {
+          ownersFilepath: abs("ownersFilepath3"),
+          comments: [],
+          noParent: false,
+          owners: None,
+          perFileOwners: None,
         },
       ];
       t.test("prints to md", t => {
         t.expect.string(
-          OrwellCmds.OwnersPrint.ByOwnersFile.toMd(ownersLines),
+          OrwellCmds.OwnersPrint.ByOwnersFile.toMd(
+            ~files,
+            ~formatEmail,
+            ~formatPath,
+          ),
         ).
           toMatchSnapshot()
       });
       t.test("prints to terminal", t => {
         t.expect.lines(
-          OrwellCmds.OwnersPrint.ByOwnersFile.toTerminal(ownersLines),
+          OrwellCmds.OwnersPrint.ByOwnersFile.toTerminal(
+            ~files,
+            ~formatEmail,
+            ~formatPath,
+          ),
         ).
           toMatchSnapshot()
       });
-    });
-    t.describe("PrintByOwners", t => {
-      let ownersLines: list(Repo.Owners.OwnersLines.groupedByOwner) = [
-        {
-          owner: "owner1",
-          paths: [
-            {
-              ownersFilePaths: ("ownersFilePaths11", 1),
-              filepaths: ["filepath11"],
-            },
-            {
-              ownersFilePaths: ("ownersFilePaths12", 2),
-              filepaths: ["filepath12"],
-            },
-          ],
-        },
-        {
-          owner: "owner2",
-          paths: [
-            {
-              ownersFilePaths: ("ownersFilePaths21", 2),
-              filepaths: ["filepath21"],
-            },
-            {
-              ownersFilePaths: ("ownersFilePaths22", 1),
-              filepaths: ["filepath22"],
-            },
-          ],
-        },
-      ];
-      t.test("prints to md", t => {
-        t.expect.string(OrwellCmds.OwnersPrint.ByOwner.toMd(ownersLines)).
-          toMatchSnapshot()
-      });
-      t.test("prints to terminal", t => {
-        t.expect.lines(
-          OrwellCmds.OwnersPrint.ByOwner.toTerminal(ownersLines),
-        ).
-          toMatchSnapshot()
-      });
-    });
-  })
+    })
+  });
 });

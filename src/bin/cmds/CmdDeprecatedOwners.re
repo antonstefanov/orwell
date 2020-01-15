@@ -1,6 +1,19 @@
 open Ds.Components;
 let version = V.version;
 
+let createTransformOwners = repodir => {
+  let contributorsFilepath =
+    Repo.Contributors.getContributorsFilepath(repodir);
+
+  let%lwt contributorsMap =
+    Repo.Contributors.readFileToMap(contributorsFilepath);
+
+  let transformContributors =
+    Repo.Contributors.transformOwners(~contributorsMap);
+
+  Lwt.return(transformContributors);
+};
+
 module T = Rarg.Type;
 module Cmd = Rarg.Cmd;
 module Args = Rarg.Args;
@@ -44,54 +57,42 @@ let printAndCopy =
       ~copy: bool,
       ~groupBy: GroupBy.t,
     ) => {
-  let contributorsFilepath =
-    Repo.Contributors.getContributorsFilepath(repodir);
-
-  let%lwt contributorsMap =
-    Repo.Contributors.readFileToMap(contributorsFilepath);
-  let formatEmail = email =>
-    Repo.Contributors.emailToContributor(email, ~contributorsMap);
-
-  let repodirLength = String.length(repodir) + 1;
-  let formatPath = path =>
-    DsSeed.Strings.substr(
-      DsSeed.AbsolutePath.toString(path),
-      ~starti=repodirLength,
-      (),
+  let%lwt transformOwners = createTransformOwners(repodir);
+  let%lwt groupedOwners =
+    Repo.Owners.OwnersLines.readGroupedByOwnersFile(
+      ~repodir,
+      ~changedFiles=files,
+      ~transform=transformOwners,
     );
-  let rootdir = DsSeed.AbsolutePath.(make(~rootdir=root, ~path=repodir));
-  let filepaths =
-    files |> List.map(path => DsSeed.AbsolutePath.make(~rootdir, ~path));
-
-  let matchOwnersResult =
-    Owners.GroupedByOwnersFile.matchOwners(~filepaths, ~rootdir);
-
-  let toMd = () =>
-    BetaOwnersPrint.Printer.ByOwnersFile.toMd(
-      ~files=matchOwnersResult,
-      ~formatPath,
-      ~formatEmail,
-    );
-  let toLines = () =>
-    BetaOwnersPrint.Printer.ByOwnersFile.toTerminal(
-      ~files=matchOwnersResult,
-      ~formatPath,
-      ~formatEmail,
-    );
+  let (toMd, toLines) =
+    switch (groupBy) {
+    | OwnersFile =>
+      let p = DeprecatedOwnersPrint.ByOwnersFile.printer;
+      ((() => p.toMd(groupedOwners)), (() => p.toTerminal(groupedOwners)));
+    | Owner =>
+      let p = DeprecatedOwnersPrint.ByOwner.printer;
+      let grouped = Repo.Owners.OwnersLines.groupByOwner(groupedOwners);
+      ((() => p.toMd(grouped)), (() => p.toTerminal(grouped)));
+    };
 
   let%lwt () = Printer.printAndCopy(~toMd, ~toLines, ~copy);
   Lwt.return(Ok());
 };
 
 module CmdOwnersFiles = {
-  let handle = (~files1: list(string), ~files2: list(string), ~copy: bool) => {
-    // ~groupBy: GroupBy.t,
+  let handle =
+      (
+        ~files1: list(string),
+        ~files2: list(string),
+        ~copy: bool,
+        ~groupBy: GroupBy.t,
+      ) => {
     let%lwt repodir = Repo.Git.getRootDir();
     let%lwt files3 = Shell.Process.readCurrentInChannel(stdin);
     // piped files support
     switch (files1 @ files2 @ files3) {
     | [] => Lwt.return(Error("No files provided"))
-    | files => printAndCopy(~files, ~repodir, ~copy, ~groupBy=OwnersFile)
+    | files => printAndCopy(~files, ~repodir, ~copy, ~groupBy)
     };
   };
   let args = [];
@@ -111,7 +112,7 @@ module CmdOwnersFiles = {
       ~default=[],
       T.string,
     );
-  // let (args, getGroupBy) = GroupBy.arg(args);
+  let (args, getGroupBy) = GroupBy.arg(args);
   let (args, getCopy) = SharedArg.createCopy(args);
 
   let run = map => {
@@ -119,7 +120,7 @@ module CmdOwnersFiles = {
       ~files1=getFiles1(map),
       ~files2=getFiles2(map),
       ~copy=getCopy(map),
-      // ~groupBy=getGroupBy(map),
+      ~groupBy=getGroupBy(map),
     );
   };
 
@@ -157,7 +158,7 @@ module CmdOwnersChanged = {
         ~comparedCommit=?,
         ~forkCommit: string,
         ~copy: bool,
-        // ~groupBy: GroupBy.t,
+        ~groupBy: GroupBy.t,
         ~includeUntracked: bool,
       ) => {
     let%lwt repodir = Repo.Git.getRootDir();
@@ -167,16 +168,11 @@ module CmdOwnersChanged = {
       includeUntracked
         ? mergeUntracked(changedFilesList) : Lwt.return(changedFilesList);
 
-    printAndCopy(
-      ~files=changedFilesList,
-      ~repodir,
-      ~copy,
-      ~groupBy=OwnersFile,
-    );
+    printAndCopy(~files=changedFilesList, ~repodir, ~copy, ~groupBy);
   };
   let args = [];
   let (args, getBase) = GitArg.createBase(args);
-  // let (args, getGroupBy) = GroupBy.arg(args);
+  let (args, getGroupBy) = GroupBy.arg(args);
   let (args, getCopy) = SharedArg.createCopy(args);
   let (args, getIncludeUntracked) =
     Args.One.boolFlag(
@@ -199,7 +195,7 @@ module CmdOwnersChanged = {
         ~comparedCommit?,
         ~filter=?getFilter(map),
         ~copy=getCopy(map),
-        // ~groupBy=getGroupBy(map),
+        ~groupBy=getGroupBy(map),
         ~includeUntracked=getIncludeUntracked(map),
       )
     };
@@ -257,7 +253,7 @@ let cmd: Cmd.t(Lwt.t(cmdResult)) = {
     </Lines>;
 
   Cmd.make(
-    ~name="Owners",
+    ~name="Deprecated Owners - they don't support per-file directives",
     ~version,
     ~doc,
     ~args,

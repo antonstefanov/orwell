@@ -1,14 +1,36 @@
 Ds_Repo › Owners › PrintByOwnersFile › prints to md
-`ownersFilePath1`
-owner11, owner12
+`/ownersFilepath1`
+noparent
+> comment-line11
+> comment-line12
+
+per-file: filename1 | noparent: email13, email14
+per-file-glob: filename11* | email15, email16
 ```
-filepath11
-filepath12
+/filepath13
+/filepath14
+```
+email11, email12
+```
+/filepath11
+/filepath12
 ```
 ---
-`ownersFilePath2`
-owner21, owner22
+`/ownersFilepath2`
+noparent
+> comment-line21
+> comment-line22
+
+per-file-glob: filename11* | email25, email26
+per-file: filename2 | anyone
 ```
-filepath21
-filepath22
+/filepath23
+/filepath24
 ```
+anyone
+```
+/filepath21
+/filepath22
+```
+---
+`/ownersFilepath3`
