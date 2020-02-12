@@ -4,6 +4,7 @@ type per_file_owner = SetNoParent | Anyone | Email of string | Path of string
 
 type line =
   | SetNoParent
+  | Anyone
   | Comment of string
   | Email of string
   | Path of string

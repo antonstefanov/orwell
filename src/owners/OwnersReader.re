@@ -107,6 +107,7 @@ module FollowedOwnersAst = {
          (xs, x) => {
            switch (x) {
            | Owners_parser.Ast.SetNoParent => [SetNoParent, ...xs]
+           | Anyone => [Anyone, ...xs]
            | Comment(x) => [Comment(x), ...xs]
            | Email(x) => [Email(x), ...xs]
            | Path(path) =>
