@@ -30,6 +30,7 @@ prog:
   | EOF       { None   }
 
 line:
+  | ASTERIX                                   { Anyone                    }
   | SET_NO_PARENT                             { SetNoParent               }
   | x = COMMENT                               { Comment (clean_comment x) }
   | x = EMAIL                                 { Email x                   }

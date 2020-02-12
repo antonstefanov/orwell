@@ -374,7 +374,17 @@ module GroupedByOwnersFile: {
 
            let nextOwnersFile =
              switch (result.matchedOwners) {
-             | Anyone => {...ownersFile, anyone: true}
+             | Anyone => {
+                 ...ownersFile,
+                 anyone: true,
+                 owners: {
+                   filepaths: [
+                     result.filepath,
+                     ...ownersFile.owners.filepaths,
+                   ],
+                   owners: ownersFile.owners.owners,
+                 },
+               }
              | Emails({noParent, emails}) => {
                  ...ownersFile,
                  noParent,

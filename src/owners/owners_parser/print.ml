@@ -33,14 +33,16 @@ let per_file_file_to_string = function
   | Ast.Filename x -> "Filename(" ^ x ^ ")"
   | FileGlob x -> "FileGlob(" ^ x ^ ")"
 
-let per_file_owner_to_string = function
-  | Ast.Anyone -> "Anyone"
+let per_file_owner_to_string (x : Ast.per_file_owner) =
+  match x with
+  | Anyone -> "Anyone"
   | SetNoParent -> "SetNoParent"
   | Email x -> "Email(" ^ x ^ ")"
   | Path x -> "Path(" ^ x ^ ")"
 
 let line_to_string = function
   | Ast.SetNoParent -> "SetNoParent"
+  | Anyone -> "Anyone"
   | Comment x -> "Comment(" ^ x ^ ")"
   | Email x -> "Email(" ^ x ^ ")"
   | Path x -> "Path" ^ x ^ ")"
