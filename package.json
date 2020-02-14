@@ -1,7 +1,7 @@
 {
   "name": "orwell-cli",
-  "version": "0.7.1",
-  "description": "DS description",
+  "version": "0.7.2",
+  "description": "orwell cli - chromium format owners parser",
   "license": "MIT",
   "author": {
     "name": "Anton Stefanov",

@@ -213,11 +213,16 @@ module SS: {
   let toList: t => list(string);
 } = {
   module StringSet = Set.Make(String);
-  type t = StringSet.t;
-  let empty = StringSet.empty;
-  let add = (set, x) => StringSet.add(x, set);
-  let addMany = (set, xs) => List.fold_left(add, set, xs);
-  let toList = StringSet.elements;
+  type t = (StringSet.t, list(string));
+  let empty = (StringSet.empty, []);
+  let add = ((set, list), x) => {
+    switch (StringSet.mem(x, set)) {
+    | false => (StringSet.add(x, set), [x, ...list])
+    | true => (set, list)
+    };
+  };
+  let addMany = (setAndIndex, xs) => List.fold_left(add, setAndIndex, xs);
+  let toList = ((_, list)) => List.rev(list);
 };
 
 module PerFileSet: {
@@ -268,11 +273,16 @@ module PerFileSet: {
         };
       };
     });
-  type t = S.t;
-  let empty = S.empty;
-  let add = (set, x) => S.add(x, set);
-  let addMany = (set, xs) => List.fold_left(add, set, xs);
-  let toList = S.elements;
+  type t = (S.t, list(value));
+  let empty = (S.empty, []);
+  let add = ((set, list), x) => {
+    switch (S.mem(x, set)) {
+    | false => (S.add(x, set), [x, ...list])
+    | true => (set, list)
+    };
+  };
+  let addMany = (t, xs) => List.fold_left(add, t, xs);
+  let toList = ((_, list)) => List.rev(list);
 };
 
 module GroupedByOwnersFile: {
