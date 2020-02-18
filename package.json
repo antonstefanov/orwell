@@ -1,6 +1,6 @@
 {
   "name": "orwell-cli",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "orwell cli - chromium format owners parser",
   "license": "MIT",
   "author": {
