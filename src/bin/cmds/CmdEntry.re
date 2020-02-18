@@ -21,6 +21,7 @@ module CmdStart = {
         ("owners", CmdOwners.cmd),
         ("deprecated_owners", CmdDeprecatedOwners.cmd),
         ("git", CmdGit.cmd),
+        ("superlgtm", CmdSuperLgtm.cmd),
       ],
       (),
     );
