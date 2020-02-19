@@ -18,7 +18,7 @@ let handle = () => {
   let%lwt exitCode =
     Lwt_process.exec((
       "",
-      [|"python", DsSeed.AbsolutePath.toString(superLgtmPath)|],
+      [|"python3", DsSeed.AbsolutePath.toString(superLgtmPath)|],
     ));
   let (s, code) =
     switch (exitCode) {
